@@ -1,0 +1,20 @@
+---
+# tasks file for lo5an.bindfs
+- name: Meet bindfs compile dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - fuse
+    - fuse-devel
+
+- name: Ensure bindfs source is available. 
+  get_url: url=http://bindfs.org/downloads/bindfs-1.13.0.tar.gz dest=/home/vagrant
+
+- name: Build and install bindfs
+  shell: "{{ item }}"
+  args:
+    creates: /usr/local/bin/bindfs
+    chdir: /home/vagrant/bindfs-1.13.0
+  with_items:
+    - ./configure 
+    - make
+    - make install
